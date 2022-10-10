@@ -6,12 +6,16 @@ import json
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 
+##send a request to the Api
 df_json = requests.get("http://api.citybik.es/v2/networks").json()
+
+##create a list of avaible cities in the Api to choose from in the dropdown elemnet of the dash app
 cities = []
 for network in df_json["networks"]:
     cities.append(network["location"]["city"])
 
 def get_city_data(city):
+    """a function that return a list of -bike statios network- for a choosen city"""
     city_bike_networks = requests.get("http://api.citybik.es/v2/networks").json()
     list_of_dicts = []
     for city_bike_dict in city_bike_networks['networks']:
@@ -22,6 +26,7 @@ def get_city_data(city):
     return list_of_dicts
 
 def get_stations_info(city):
+    """a function that send multiple Api requests to get bike stations for each network and put them togather """
     station_dict = get_city_data(city)
     if not station_dict:
         print("Error: No bike company found for {}".format(city))
@@ -32,10 +37,10 @@ def get_stations_info(city):
     return requests.get(url).json()['network']['stations']
 
 
-def get_available_stations(city="Paris"):
+def get_available_stations(city="Bruxelles"):
     '''
-    Takes in the city name and returns a pandas dataframe containing information about the city
-    Default city name is Paris
+    a function that Takes in the city name and returns a pandas dataframe containing information about the city
+    Default city name is Bruxelles
     '''
     station_info = get_stations_info(city)
 
@@ -63,7 +68,7 @@ def get_available_stations(city="Paris"):
             a_dict['Unique ID'] = ""
 
         station_list.append(a_dict)
-
+##transform the Json dict to Dataframe
     return pd.DataFrame(station_list)
 
 
@@ -132,9 +137,3 @@ def show_map(city):
 
 if __name__ == '__main__':
     app.run_server(debug = True)
-
-
-
-
-
-
