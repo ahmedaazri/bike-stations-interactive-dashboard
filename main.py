@@ -98,7 +98,7 @@ app.layout = html.Div([
     html.Br(),
     html.A("check source code in my github",
            id="github",
-           href="https://github.com/ahmedaazri",
+           href="https://github.com/ahmedaazri/bike-stations-interactive-dashboard",
            target="_blank",
            ),
 
